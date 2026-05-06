@@ -4,9 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class agent extends Model
+class Agent extends Model
 {
-    protected $table = 'agent'; // MUST match table name
+    protected $table = 'agent';
     protected $primaryKey = 'idUser';
     public $timestamps = false;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'idUser');
+    }
 }

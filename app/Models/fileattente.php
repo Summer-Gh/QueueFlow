@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class fileattente extends Model
+class FileAttente extends Model
 {
     protected $table = 'fileattente';
     protected $primaryKey = 'idFile';
@@ -15,4 +15,16 @@ class fileattente extends Model
         'capacite',
         'idService'
     ];
+
+    // relation → service
+    public function service()
+    {
+        return $this->belongsTo(Service::class, 'idService');
+    }
+
+    // relation → tickets
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'idFile');
+    }
 }

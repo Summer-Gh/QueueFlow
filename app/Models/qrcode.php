@@ -4,15 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class qrcode extends Model
+class Qrcode extends Model
 {
     protected $table = 'qrcode';
-    protected $primaryKey = 'idQR';
+    protected $primaryKey = 'idQrcode';
     public $timestamps = false;
 
     protected $fillable = [
         'code',
-        'statut',
         'idTicket'
     ];
+
+    public function ticket()
+    {
+        return $this->belongsTo(Ticket::class, 'idTicket');
+    }
 }

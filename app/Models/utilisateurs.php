@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class utilisateurs extends Model
+class Utilisateurs extends Model
 {
     protected $table = 'utilisateurs';
     protected $primaryKey = 'idUser';
@@ -14,4 +14,9 @@ class utilisateurs extends Model
         'idUser',
         'Telephone'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'idUser');
+    }
 }

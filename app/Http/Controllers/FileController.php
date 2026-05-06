@@ -29,28 +29,30 @@ class FileController extends Controller
     // JOIN FILE (USER)
     public function join(Request $request)
     {
-        $file = FileAttente::find($request->idFile);
+    $file = FileAttente::find($request->idFile);
 
-        if (!$file) {
-            return back()->with('error', 'File inexistante');
-        }
+    if (!$file) {
+        return back()->with('error', 'File inexistante');
+    }
 
-        $count = Ticket::where('idFile', $file->idFile)->count();
+    $count = Ticket::where('idFile', $file->idFile)->count();
 
-        // capacity check 
-        if ($count >= $file->capacite) {
-            return back()->with('error', 'File pleine');
-        }
+    if ($count >= $file->capacite) {
+        return back()->with('error', 'File pleine');
+    }
 
-        $position = $count + 1;
+    $position = $count + 1;
+    $temps = $position * 5;
 
-        Ticket::create([
-            'tempsestime' => $position * 5,
-            'position' => $position,
-            'idFile' => $file->idFile
-        ]);
+    $ticket = Ticket::create([
+        'tempsEstime' => $temps,
+        'position' => $position,
+        'idFile' => $file->idFile
+    ]);
 
-        return back()->with('success', 'Vous avez rejoint la file');
+    return back()->with('success', 
+        'Vous avez rejoint la file | Position: '.$position.' | Temps estimé: '.($position*5).' min'
+    );
     }
 
     // DELETE FILE (agent)
@@ -86,5 +88,28 @@ class FileController extends Controller
         $file->save();
         return back()->with('success', 'File modifiée');
     }
-    
+    public function next($id)
+    {
+    $first = Ticket::where('idFile', $id)
+        ->orderBy('position', 'asc')
+        ->first();
+
+    if (!$first) {
+        return back()->with('error', 'Aucun client');
+    }
+
+    // remove first client
+    $first->delete();
+
+    // update others
+    $tickets = Ticket::where('idFile', $id)->get();
+
+    foreach ($tickets as $t) {
+        $t->position = $t->position - 1;
+        $t->tempsEstime = $t->position * 5;
+        $t->save();
+    }
+
+    return back()->with('success', 'Client suivant appelé');
+    }
 }

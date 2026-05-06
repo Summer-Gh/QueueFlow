@@ -4,14 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class notifications extends Model
+class Notifications extends Model
 {
     protected $table = 'notifications';
-    protected $primaryKey = 'idNotif';
+    protected $primaryKey = 'idNotification';
     public $timestamps = false;
 
     protected $fillable = [
         'message',
-        'idTicket'
+        'idUser'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'idUser');
+    }
 }

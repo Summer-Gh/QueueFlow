@@ -13,6 +13,18 @@ class User extends Model
     protected $fillable = [
         'nom',
         'email',
-        'motDePasse'
+        'mdp'
     ];
+
+    // relation → utilisateur (telephone)
+    public function utilisateur()
+    {
+        return $this->hasOne(Utilisateurs::class, 'idUser');
+    }
+
+    // relation → tickets
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class, 'idUser');
+    }
 }

@@ -41,3 +41,5 @@ Route::get('/file/update/{id}', [FileController::class, 'updateForm'])->name('fi
 Route::post('/file/update/{id}', [FileController::class, 'update'])->name('file.update');
 Route::get('/register', [AuthController::class, 'showRegister']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::post('/file/next/{id}', [FileController::class, 'next'])->name('file.next');
+Route::post('/file/next/{id}', [FileController::class, 'next'])->name('file.next');

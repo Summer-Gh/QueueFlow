@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Agent;
-use App\Models\Utilisateur;
+use App\Models\utilisateurs;
 
 class AuthController extends Controller
 {
@@ -68,21 +68,23 @@ class AuthController extends Controller
     $request->validate([
         'nom' => 'required',
         'email' => 'required|email|unique:users,email',
-        'password' => 'required',
-        'telephone' => 'required'
+        'password' => 'required|min:3|same:c_password',
+        'c_password' => 'required'
+    ], [
+        'password.same' => 'Les mots de passe ne correspondent pas'
     ]);
 
     // create user
-    $user = new User();
-    $user->nom = $request->nom;
-    $user->email = $request->email;
-    $user->mdp = $request->password;
-    $user->save();
+    $user = User::create([
+        'nom' => $request->nom,
+        'email' => $request->email,
+        'mdp' => $request->password
+    ]);
 
-    // NOW idUser is guaranteed
-    Utilisateur::create([
+    // create utilisateur (optional telephone)
+    utilisateurs::create([
         'idUser' => $user->idUser,
-        'telephone' => $request->telephone
+        'Telephone' => $request->telephone
     ]);
 
     return redirect('/login')->with('success', 'Compte créé avec succès');

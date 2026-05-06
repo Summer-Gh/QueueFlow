@@ -4,6 +4,7 @@
 
 <hr>
 
+{{-- MESSAGES --}}
 @if(session('success'))
     <p style="color:green;">{{ session('success') }}</p>
 @endif
@@ -12,9 +13,9 @@
     <p style="color:red;">{{ session('error') }}</p>
 @endif
 
-{{-- ========================= --}}
-{{-- FILE DISPLAY --}}
-{{-- ========================= --}}
+<hr>
+
+{{-- FILE --}}
 @if($service->fileAttente)
 
     <h3>File disponible</h3>
@@ -22,9 +23,7 @@
     <p>Nom : {{ $service->fileAttente->nomFile }}</p>
     <p>Capacité : {{ $service->fileAttente->capacite }}</p>
 
-    {{-- ========================= --}}
-    {{-- USER ACTION --}}
-    {{-- ========================= --}}
+    {{-- USER JOIN --}}
     @if(session('role') == 'utilisateur')
 
         <form method="POST" action="{{ route('file.join') }}">
@@ -35,38 +34,63 @@
 
     @endif
 
-
-    {{-- ========================= --}}
     {{-- AGENT ACTIONS --}}
-    {{-- ========================= --}}
     @if(session('role') == 'agent')
 
         <br>
 
-        {{-- UPDATE FILE --}}
         <a href="{{ route('file.update.form', $service->fileAttente->idFile) }}">
             Modifier file
         </a>
 
         <br><br>
 
-        {{-- DELETE FILE --}}
         <form method="POST" action="{{ route('file.delete', $service->fileAttente->idFile) }}">
             @csrf
             <button style="color:red;">Supprimer file</button>
         </form>
 
+        <br><br>
+
+        {{-- CALL NEXT --}}
+        <form method="POST" action="{{ route('file.next', $service->fileAttente->idFile) }}">
+            @csrf
+            <button>Appeler suivant</button>
+        </form>
+
     @endif
 
 @else
-    <p>Aucune file disponible pour ce service</p>
+    <p>Aucune file disponible</p>
 @endif
 
 <hr>
 
-{{-- ========================= --}}
-{{-- SERVICE MANAGEMENT (AGENT) --}}
-{{-- ========================= --}}
+{{-- TICKETS --}}
+@if(isset($tickets) && count($tickets) > 0)
+
+    <h3>Liste des tickets</h3>
+
+    @foreach($tickets as $ticket)
+
+        <div style="border:1px solid black; margin:5px; padding:5px;">
+            <p>
+                Position : {{ $ticket->position }}
+            </p>
+
+            <p>
+                Temps estimé : {{ $ticket->tempsEstime }} min
+            </p>
+
+        </div>
+
+    @endforeach
+
+@endif
+
+<hr>
+
+{{-- SERVICE MANAGEMENT --}}
 @if(session('role') == 'agent')
 
     <a href="{{ route('services.update.form', $service->idService) }}">

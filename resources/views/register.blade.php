@@ -1,3 +1,8 @@
+@if($errors->any())
+    @foreach($errors->all() as $error)
+        <p style="color:red;">{{ $error }}</p>
+    @endforeach
+@endif
 <h2>Inscription</h2>
 
 @if(session('success'))
@@ -10,6 +15,7 @@
     <input type="text" name="nom" placeholder="Nom"><br><br>
     <input type="email" name="email" placeholder="Email"><br><br>
     <input type="password" name="password" placeholder="Mot de passe"><br><br>
+    <input type="password" name="c_password" placeholder="Confirmer le Mot de passe"><br><br>
     <input type="text" name="telephone" placeholder="Téléphone"><br><br>
 
     <button>S'inscrire</button>

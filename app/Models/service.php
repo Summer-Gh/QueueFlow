@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class service extends Model
+class Service extends Model
 {
     protected $table = 'services';
     protected $primaryKey = 'idService';
@@ -15,7 +15,16 @@ class service extends Model
         'description',
         'idUser'
     ];
-    public function fileAttente(){
-    return $this->hasOne(\App\Models\FileAttente::class, 'idService');
+
+    // ONE file per service
+    public function fileAttente()
+    {
+        return $this->hasOne(FileAttente::class, 'idService');
+    }
+
+    // creator (agent)
+    public function agent()
+    {
+        return $this->belongsTo(User::class, 'idUser');
     }
 }

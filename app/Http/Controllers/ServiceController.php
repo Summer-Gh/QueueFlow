@@ -9,14 +9,18 @@ use App\Models\Ticket;
 
 class ServiceController extends Controller
 {
-    // afficher tous les services
+    // =========================
+    // LIST ALL SERVICES
+    // =========================
     public function index()
     {
         $services = Service::all();
         return view('services.index', compact('services'));
     }
 
-    // ajouter service (agent)
+    // =========================
+    // ADD SERVICE (AGENT)
+    // =========================
     public function add(Request $request)
     {
         $request->validate([
@@ -31,10 +35,12 @@ class ServiceController extends Controller
         ]);
 
         return redirect()->route('services.index')
-            ->with('success', 'Service ajouté');
+            ->with('success', 'Service ajouté avec succès');
     }
 
-    // supprimer service (FIX FK ERROR)
+    // =========================
+    // DELETE SERVICE
+    // =========================
     public function delete($id)
     {
         $service = Service::find($id);
@@ -43,7 +49,7 @@ class ServiceController extends Controller
             abort(404);
         }
 
-        // delete file + tickets first
+        // delete file + tickets FIRST (FK constraint fix)
         $file = FileAttente::where('idService', $id)->first();
 
         if ($file) {
@@ -54,10 +60,12 @@ class ServiceController extends Controller
         $service->delete();
 
         return redirect()->route('services.index')
-            ->with('success', 'Service supprimé');
+            ->with('success', 'Service supprimé avec succès');
     }
 
-    // show details
+    // =========================
+    // SHOW ONE SERVICE + TICKETS
+    // =========================
     public function show($id)
     {
         $service = Service::find($id);
@@ -66,10 +74,20 @@ class ServiceController extends Controller
             abort(404);
         }
 
-        return view('services.show', compact('service'));
+        $tickets = [];
+
+        if ($service->fileAttente) {
+            $tickets = Ticket::where('idFile', $service->fileAttente->idFile)
+                ->orderBy('position', 'asc')
+                ->get();
+        }
+
+        return view('services.show', compact('service', 'tickets'));
     }
 
-    // UPDATE FORM
+    // =========================
+    // SHOW UPDATE FORM
+    // =========================
     public function updateForm($id)
     {
         $service = Service::find($id);
@@ -81,25 +99,27 @@ class ServiceController extends Controller
         return view('services.update', compact('service'));
     }
 
-    // UPDATE
+    // =========================
+    // UPDATE SERVICE
+    // =========================
     public function update(Request $request, $id)
     {
-    $request->validate([
-        'nomService' => 'required',
-        'description' => 'required'
-    ]);
+        $request->validate([
+            'nomService' => 'required',
+            'description' => 'required'
+        ]);
 
-    $service = Service::find($id);
+        $service = Service::find($id);
 
-    if (!$service) {
-        abort(404);
-    }
-
-    $service->nomService = $request->nomService;
-    $service->description = $request->description;
-    $service->save();
-
-    return redirect()->route('services.index')
-        ->with('success', 'Service modifié avec succès');
+        if (!$service) {
+            abort(404);
         }
+
+        $service->nomService = $request->nomService;
+        $service->description = $request->description;
+        $service->save();
+
+        return redirect()->route('services.index')
+            ->with('success', 'Service modifié avec succès');
+    }
 }
