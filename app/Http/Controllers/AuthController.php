@@ -63,33 +63,7 @@ class AuthController extends Controller
     // =========================
     // REGISTER (SIGN UP)
     // =========================
-    public function register(Request $request)
-    {
-    $request->validate([
-        'nom' => 'required',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|min:3|same:c_password',
-        'c_password' => 'required'
-    ], [
-        'password.same' => 'Les mots de passe ne correspondent pas'
-    ]);
-
-    // create user
-    $user = User::create([
-        'nom' => $request->nom,
-        'email' => $request->email,
-        'mdp' => $request->password
-    ]);
-
-    // create utilisateur (optional telephone)
-    utilisateurs::create([
-        'idUser' => $user->idUser,
-        'Telephone' => $request->telephone
-    ]);
-
-    return redirect('/login')->with('success', 'Compte créé avec succès');
-    }
-
+    
 
     // =========================
     // LOGOUT
