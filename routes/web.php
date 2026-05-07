@@ -44,3 +44,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/file/next/{id}', [FileController::class, 'next'])->name('file.next');
 Route::post('/file/next/{id}', [FileController::class, 'next'])->name('file.next');
 Route::post('/file/next/{id}', [FileController::class, 'next'])->name('file.next');
+Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
+
+Route::post('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
+
+Route::post('/profile/delete', [AuthController::class, 'deleteProfile'])->name('profile.delete');

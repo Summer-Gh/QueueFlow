@@ -13,12 +13,17 @@
         }
 
         body{
-            height:100vh;
+            min-height:100vh;
             background:#0F172A;
+            overflow-x:hidden;
+        }
+
+        .main-content{
+            min-height:100vh;
             display:flex;
             justify-content:center;
             align-items:center;
-            overflow:hidden;
+            padding:40px 20px;
         }
 
         .background-circle{
@@ -46,9 +51,11 @@
             position:relative;
             z-index:10;
 
-            width:600px;
+            width:650px;
+            max-width:90%;
+
             background:white;
-            padding:50px;
+            padding:45px;
             border-radius:25px;
 
             text-align:center;
@@ -142,9 +149,18 @@
         }
 
         .footer{
-            margin-top:30px;
-            color:#999;
-            font-size:13px;
+            margin-top:20px;
+            background:#0F172A;
+            color:white;
+            text-align:center;
+            padding:25px;
+            width:100%;
+        }
+
+        .footer a{
+            color:#38BDF8;
+            text-decoration:none;
+            font-weight:bold;
         }
 
     </style>
@@ -155,54 +171,69 @@
 <div class="background-circle circle1"></div>
 <div class="background-circle circle2"></div>
 
-<div class="card">
+<div class="main-content">
 
-    <div class="logo">
-        LOGO
+    <div class="card">
+
+        <div class="logo">
+            <img src="{{ asset('images/logo.png') }}" alt="LOGO" width="320">
+        </div>
+
+        <h1>QueueFlow</h1>
+
+        <p class="subtitle">
+            Une plateforme moderne de gestion des files d’attente permettant
+            aux utilisateurs de rejoindre une file, suivre leur ticket
+            et recevoir des notifications intelligentes.
+        </p>
+
+        <div class="features">
+
+            <div class="feature">
+                <h3>🎫 Tickets</h3>
+                <p>Génération automatique des tickets.</p>
+            </div>
+
+            <div class="feature">
+                <h3>🔔 Notifications</h3>
+                <p>Alertes automatiques pour les clients.</p>
+            </div>
+
+            <div class="feature">
+                <h3>⚡ Rapidité</h3>
+                <p>Gestion fluide des files d’attente.</p>
+            </div>
+
+        </div>
+
+        <div class="buttons">
+
+            <a href="/login" class="btn login">
+                Connexion
+            </a>
+
+            <a href="/register" class="btn register">
+                Inscription
+            </a>
+
+        </div>
+
     </div>
 
-    <h1>QueueFlow</h1>
+</div>
 
-    <p class="subtitle">
-        Une plateforme moderne de gestion des files d’attente permettant
-        aux utilisateurs de rejoindre une file, suivre leur ticket
-        et recevoir des notifications intelligentes.
+<div class="footer">
+
+    <p>
+        © 2026 QueueFlow — Gestion intelligente des files d’attente
     </p>
 
-    <div class="features">
-
-        <div class="feature">
-            <h3>🎫 Tickets</h3>
-            <p>Génération automatique des tickets.</p>
-        </div>
-
-        <div class="feature">
-            <h3>🔔 Notifications</h3>
-            <p>Alertes automatiques pour les clients.</p>
-        </div>
-
-        <div class="feature">
-            <h3>⚡ Rapidité</h3>
-            <p>Gestion fluide des files d’attente.</p>
-        </div>
-
-    </div>
-
-    <div class="buttons">
-
-        <a href="/login" class="btn login">
-            Connexion
+    <p>
+        Suivez-nous sur Facebook :
+        <a href="https://facebook.com">
+            QueueFlow
         </a>
-
-        <a href="/register" class="btn register">
-            Inscription
-        </a>
-
-    </div>
-
-    <div class="footer">
-        QueueFlow © 2026
-    </div>
+    </p>
 
 </div>
 

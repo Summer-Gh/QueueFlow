@@ -10,23 +10,36 @@
             font-family:Arial;
             background:#F1F5F9;
         }
-
         .navbar{
             background:#0F172A;
-            color:white;
-            padding:20px 40px;
-
+            padding:18px 40px;
             display:flex;
             justify-content:space-between;
             align-items:center;
-
-            box-shadow:0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .logo{
+        .nav-left{
             display:flex;
             align-items:center;
-            gap:12px;
+            gap:15px;
+            color:white;
+        }
+        .logo{
+            width:55px;
+            height:55px;
+            object-fit:cover;
+            border-radius:12px;
+        }
+        .nav-right{
+            display:flex;
+            gap:15px;
+        }
+        .nav-btn{
+            background:#38BDF8;
+            color:white;
+            padding:10px 18px;
+            border-radius:10px;
+            text-decoration:none;
+            font-weight:bold;
         }
 
         .logo-circle{
@@ -162,6 +175,18 @@
             border-top:1px solid #e2e8f0;
             margin:20px 0;
         }
+        .footer{
+            margin-top:60px;
+            background:#0F172A;
+            color:white;
+            text-align:center;
+            padding:25px;
+        }
+        .footer a{
+            color:#38BDF8;
+            text-decoration:none;
+            font-weight:bold;
+        }
 
     </style>
 
@@ -170,14 +195,24 @@
 
 <div class="navbar">
 
-    <div class="logo">
-        <div class="logo-circle"></div>
+    <div class="nav-left">
+
+        <img src="{{ asset('images/logo.png') }}" class="logo">
         <h2>QueueFlow</h2>
+
     </div>
 
-    <a href="/logout" class="logout">
-        Déconnexion
-    </a>
+    <div class="nav-right">
+
+        <a href="{{ route('profile') }}" class="nav-btn">
+            Mon profil
+        </a>
+
+        <a href="/logout" class="nav-btn">
+            Déconnexion
+        </a>
+
+    </div>
 
 </div>
 
@@ -325,6 +360,20 @@
     <a href="/dashboard" class="back-btn">
         Retour au dashboard
     </a>
+
+</div>
+<div class="footer">
+
+    <p>
+        © 2026 QueueFlow — Gestion intelligente des files d’attente
+    </p>
+
+    <p>
+        Suivez-nous sur Facebook :
+        <a href="https://facebook.com">
+            QueueFlow
+        </a>
+    </p>
 
 </div>
 

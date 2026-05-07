@@ -98,4 +98,81 @@ class AuthController extends Controller
         session()->flush();
         return redirect('/login');
     }
+    // =========================
+    // PROFILE PAGE
+    // =========================
+    public function profile()
+    {
+    $user = User::find(session('user_id'));
+
+    return view('profile', compact('user'));
+    }
+
+// =========================
+// UPDATE PROFILE
+// =========================
+    public function updateProfile(Request $request)
+    {
+    $user = User::find(session('user_id'));
+
+    $user->nom = $request->nom;
+    $user->email = $request->email;
+
+    if($request->password != null){
+        $user->mdp = $request->password;
+    }
+
+    $user->save();
+
+    session([
+        'user_nom' => $user->nom
+    ]);
+
+    return back()->with('success', 'Profil modifié avec succès');
+    }
+
+// =========================
+// DELETE PROFILE
+// =========================
+    public function deleteProfile()
+    {
+    $userId = session('user_id');
+
+    // delete utilisateur row first
+    \App\Models\utilisateurs::where('idUser', $userId)->delete();
+
+    // delete tickets
+    \App\Models\Ticket::where('idUser', $userId)->delete();
+
+    // delete services created by this user
+    $services = \App\Models\Service::where('idUser', $userId)->get();
+
+    foreach($services as $service){
+
+        $file = \App\Models\FileAttente::where(
+            'idService',
+            $service->idService
+        )->first();
+
+        if($file){
+
+            \App\Models\Ticket::where(
+                'idFile',
+                $file->idFile
+            )->delete();
+
+            $file->delete();
+        }
+
+        $service->delete();
+    }
+
+    // finally delete user
+    \App\Models\User::where('idUser', $userId)->delete();
+
+    session()->flush();
+
+    return redirect('/')
+        ->with('success', 'Compte supprimé avec succès');
+    }
 }

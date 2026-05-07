@@ -54,6 +54,16 @@
             font-weight:bold;
             cursor:pointer;
         }
+        .back-btn{
+            display:inline-block;
+            margin-top:20px;
+            background:#0F172A;
+            color:white;
+            padding:12px 18px;
+            border-radius:10px;
+            text-decoration:none;
+            font-weight:bold;
+        }
 
     </style>
 
@@ -81,7 +91,9 @@
         </button>
 
     </form>
-    <a href="{{ route('services.index') }}">Retour</a>
+    <a href="{{ route('services.index') }}" class="back-btn">
+        <-Retour
+    </a>
 
 </div>
 

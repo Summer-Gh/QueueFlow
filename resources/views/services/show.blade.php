@@ -1,176 +1,418 @@
-<h1>{{ $service->nomService }}</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ $service->nomService }}</title>
 
-<p>{{ $service->description }}</p>
+    <style>
 
-<hr>
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#F1F5F9;
+        }
+        .navbar{
+            background:#0F172A;
+            padding:18px 40px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+        .nav-left{
+            display:flex;
+            align-items:center;
+            gap:15px;
+            color:white;
+        }
+        .logo{
+            width:55px;
+            height:55px;
+            object-fit:cover;
+            border-radius:12px;
+        }
+        .nav-right{
+            display:flex;
+            gap:15px;
+        }
+        .nav-btn{
+            background:#38BDF8;
+            color:white;
+            padding:10px 18px;
+            border-radius:10px;
+            text-decoration:none;
+            font-weight:bold;
+        }
 
-@if(session('success'))
-    <p style="color:green;">{{ session('success') }}</p>
-@endif
+        .logout{
+            background:#38BDF8;
+            color:white;
+            padding:10px 18px;
+            border-radius:10px;
+            text-decoration:none;
+            font-weight:bold;
+        }
 
-@if(session('error'))
-    <p style="color:red;">{{ session('error') }}</p>
-@endif
+        .container{
+            padding:40px;
+        }
 
-<hr>
+        .card{
+            background:white;
+            padding:30px;
+            border-radius:20px;
 
-@if($service->fileAttente)
+            box-shadow:0 5px 15px rgba(0,0,0,0.08);
 
-    <h3>File disponible</h3>
+            margin-bottom:30px;
+        }
 
-    <p>Nom : {{ $service->fileAttente->nomFile }}</p>
+        h1,h2,h3{
+            color:#0F172A;
+        }
 
-    <p>Capacité : {{ $service->fileAttente->capacite }}</p>
+        p{
+            color:#475569;
+        }
 
-    {{-- ========================= --}}
-    {{-- USER --}}
-    {{-- ========================= --}}
-    @if(session('role') == 'utilisateur')
+        button{
+            padding:12px 18px;
+            border:none;
+            border-radius:10px;
 
-        @if(!$myTicket)
+            background:#38BDF8;
+            color:white;
 
-            <form method="POST" action="{{ route('file.join') }}">
-                @csrf
+            font-weight:bold;
+            cursor:pointer;
+        }
 
-                <input type="hidden"
-                       name="idFile"
-                       value="{{ $service->fileAttente->idFile }}">
+        button:hover{
+            opacity:0.9;
+        }
 
-                <button>Rejoindre file</button>
-            </form>
+        .danger{
+            background:#ef4444;
+        }
 
-        @else
+        .warning{
+            background:#f59e0b;
+        }
 
-            <hr>
+        .update-link{
+            text-decoration:none;
+            color:#38BDF8;
+            font-weight:bold;
+        }
 
-            <h3>Mon Ticket</h3>
+        .message-success{
+            background:#dcfce7;
+            color:#166534;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:20px;
+        }
 
-            <p>
-                Position : {{ $myTicket->position }}
-            </p>
+        .message-error{
+            background:#fee2e2;
+            color:#991b1b;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:20px;
+        }
 
-            <p>
-                Temps estimé :
-                {{ $myTicket->tempsEstime }} min
-            </p>
+        .ticket-box{
+            background:#E0F2FE;
+            padding:20px;
+            border-radius:15px;
+            margin-top:20px;
+        }
 
-            {{-- QR CODE --}}
-            {!! QrCode::size(200)->generate(
-                'Utilisateur ID: '.$myTicket->idUser.
-                ' | Position: '.$myTicket->position.
-                ' | Temps estimé: '.$myTicket->tempsEstime.' min'
-            ) !!}
+        .ticket-list{
+            border:1px solid #CBD5E1;
+            padding:15px;
+            border-radius:15px;
+            margin-bottom:15px;
+        }
 
-            {{-- NOTIFICATION --}}
-            @if($myTicket->position <= 3)
+        .footer{
+            margin-top:60px;
+            background:#0F172A;
+            color:white;
+            text-align:center;
+            padding:25px;
+        }
+        .footer a{
+            color:#38BDF8;
+            text-decoration:none;
+            font-weight:bold;
+        }
 
-                <p style="color:red;">
-                    ⚠️ Votre tour approche !
-                </p>
+    </style>
+
+</head>
+<body>
+
+<div class="navbar">
+
+    <div class="nav-left">
+
+        <img src="{{ asset('images/logo.png') }}" class="logo">
+        <h2>QueueFlow</h2>
+
+    </div>
+
+    <div class="nav-right">
+
+        <a href="{{ route('profile') }}" class="nav-btn">
+            Mon profil
+        </a>
+
+        <a href="/logout" class="nav-btn">
+            Déconnexion
+        </a>
+
+    </div>
+
+</div>
+
+<div class="container">
+
+    {{-- SUCCESS --}}
+    @if(session('success'))
+
+        <div class="message-success">
+            {{ session('success') }}
+        </div>
+
+    @endif
+
+    {{-- ERROR --}}
+    @if(session('error'))
+
+        <div class="message-error">
+            {{ session('error') }}
+        </div>
+
+    @endif
+
+    {{-- SERVICE --}}
+    <div class="card">
+
+        <h1>{{ $service->nomService }}</h1>
+
+        <p>{{ $service->description }}</p>
+
+    </div>
+
+    {{-- FILE --}}
+    @if($service->fileAttente)
+
+    <div class="card">
+
+        <h2>File disponible</h2>
+
+        <p>
+            <strong>Nom :</strong>
+            {{ $service->fileAttente->nomFile }}
+        </p>
+
+        <p>
+            <strong>Capacité :</strong>
+            {{ $service->fileAttente->capacite }}
+        </p>
+
+        {{-- ========================= --}}
+        {{-- USER --}}
+        {{-- ========================= --}}
+        @if(session('role') == 'utilisateur')
+
+            @if(!$myTicket)
+
+                <form method="POST" action="{{ route('file.join') }}">
+                    @csrf
+
+                    <input type="hidden"
+                           name="idFile"
+                           value="{{ $service->fileAttente->idFile }}">
+
+                    <button>
+                        Rejoindre file
+                    </button>
+                </form>
+
+            @else
+
+                <div class="ticket-box">
+
+                    <h3>Mon Ticket</h3>
+
+                    <p>
+                        <strong>Position :</strong>
+                        {{ $myTicket->position }}
+                    </p>
+
+                    <p>
+                        <strong>Temps estimé :</strong>
+                        {{ $myTicket->tempsEstime }} min
+                    </p>
+
+                    <p>
+                        <strong>ID Utilisateur :</strong>
+                        {{ $myTicket->idUser }}
+                    </p>
+
+                    <br>
+
+                    {!! QrCode::size(200)->generate(
+                        'Utilisateur ID: '.$myTicket->idUser.
+                        ' | Position: '.$myTicket->position.
+                        ' | Temps estimé: '.$myTicket->tempsEstime.' min'
+                    ) !!}
+
+                    @if($myTicket->position <= 3)
+
+                        <p style="color:red; font-weight:bold; margin-top:15px;">
+                            ⚠️ Votre tour approche !
+                        </p>
+
+                    @endif
+
+                </div>
 
             @endif
 
         @endif
 
+        {{-- ========================= --}}
+        {{-- AGENT --}}
+        {{-- ========================= --}}
+        @if(session('role') == 'agent')
+
+            <br>
+
+            <a class="update-link"
+               href="{{ route('file.update.form', $service->fileAttente->idFile) }}">
+
+                Modifier file
+
+            </a>
+
+            <br><br>
+
+            <form method="POST"
+                  action="{{ route('file.delete', $service->fileAttente->idFile) }}">
+                @csrf
+
+                <button class="danger">
+                    Supprimer file
+                </button>
+
+            </form>
+
+            <br>
+
+            <form method="POST"
+                  action="{{ route('file.next', $service->fileAttente->idFile) }}">
+                @csrf
+
+                <button class="warning">
+                    Appeler suivant
+                </button>
+
+            </form>
+
+            <hr><br>
+
+            <h3>Liste des tickets</h3>
+
+            @forelse($tickets as $ticket)
+
+                <div class="ticket-list">
+
+                    <p>
+                        <strong>Client :</strong>
+                        {{ $ticket->user->nom }}
+                    </p>
+
+                    <p>
+                        <strong>Position :</strong>
+                        {{ $ticket->position }}
+                    </p>
+
+                    <p>
+                        <strong>Temps estimé :</strong>
+                        {{ $ticket->tempsEstime }} min
+                    </p>
+
+                </div>
+
+            @empty
+
+                <p>Aucun ticket</p>
+
+            @endforelse
+
+        @endif
+
+    </div>
+
+    @else
+
+        <div class="card">
+            <p>Aucune file disponible</p>
+        </div>
+
     @endif
 
-    {{-- ========================= --}}
-    {{-- AGENT --}}
-    {{-- ========================= --}}
+    {{-- SERVICE MANAGEMENT --}}
     @if(session('role') == 'agent')
 
-        <br>
+    <div class="card">
 
-        <a href="{{ route('file.update.form', $service->fileAttente->idFile) }}">
-            Modifier file
+        <a class="update-link"
+           href="{{ route('services.update.form', $service->idService) }}">
+
+            Modifier service
+
         </a>
 
         <br><br>
 
         <form method="POST"
-              action="{{ route('file.delete', $service->fileAttente->idFile) }}">
+              action="{{ route('services.delete', $service->idService) }}">
             @csrf
 
-            <button style="color:red;">
-                Supprimer file
+            <button class="danger">
+                Supprimer service
             </button>
         </form>
 
-        <br>
-
-        {{-- CALL NEXT --}}
-        <form method="POST"
-              action="{{ route('file.next', $service->fileAttente->idFile) }}">
-            @csrf
-
-            <button>
-                Appeler suivant
-            </button>
-        </form>
-
-        <hr>
-
-        {{-- TICKETS LIST --}}
-        <h3>Liste des tickets</h3>
-
-        @forelse($tickets as $ticket)
-
-            <div style="border:1px solid black; padding:10px; margin:10px;">
-
-                <p>
-                    Client :
-                    {{ $ticket->user->nom }}
-                </p>
-
-                <p>
-                    Position :
-                    {{ $ticket->position }}
-                </p>
-
-                <p>
-                    Temps estimé :
-                    {{ $ticket->tempsEstime }} min
-                </p>
-
-            </div>
-
-        @empty
-
-            <p>Aucun ticket</p>
-
-        @endforelse
+    </div>
 
     @endif
 
-@else
+    <a class="update-link"
+       href="{{ route('services.index') }}">
 
-    <p>Aucune file disponible</p>
+        ← Retour
 
-@endif
-
-<hr>
-
-@if(session('role') == 'agent')
-
-    <a href="{{ route('services.update.form', $service->idService) }}">
-        Modifier service
     </a>
 
-    <br><br>
+</div>
 
-    <form method="POST"
-          action="{{ route('services.delete', $service->idService) }}">
-        @csrf
+<div class="footer">
 
-        <button style="color:red;">
-            Supprimer service
-        </button>
-    </form>
+    <p>
+        © 2026 QueueFlow — Gestion intelligente des files d’attente
+    </p>
 
-@endif
+    <p>
+        Suivez-nous sur Facebook :
+        <a href="https://facebook.com">
+            QueueFlow
+        </a>
+    </p>
 
-<br>
+</div>
 
-<a href="{{ route('services.index') }}">
-    Retour
-</a>
+</body>
+</html>

@@ -87,14 +87,20 @@ class FileController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $file = \App\Models\FileAttente::find($id);
-        if (!$file) {
-            abort(404);
-        }
-        $file->nomFile = $request->nomFile;
-        $file->capacite = $request->capacite;
-        $file->save();
-        return back()->with('success', 'File modifiée');
+    $file = FileAttente::find($id);
+
+    if (!$file) {
+        abort(404);
+    }
+
+    $file->nomFile = $request->nomFile;
+    $file->capacite = $request->capacite;
+    $file->save();
+
+    return redirect()->route(
+        'services.show',
+        $file->idService
+    )->with('success', 'File modifiée avec succès');
     }
     public function next($id)
     {
