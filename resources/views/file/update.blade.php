@@ -1,12 +1,91 @@
-<h2>Modifier file</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modifier File</title>
 
-<form method="POST" action="{{ route('file.update', $file->idFile) }}">
-    @csrf
+    <style>
 
-    <input type="text" name="nomFile" value="{{ $file->nomFile }}"><br><br>
-    <input type="number" name="capacite" value="{{ $file->capacite }}"><br><br>
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#F1F5F9;
 
-    <button>Modifier</button>
-</form>
+            display:flex;
+            justify-content:center;
+            align-items:center;
 
-<a href="{{ route('services.index') }}">Retour</a>
+            height:100vh;
+        }
+
+        .card{
+            background:white;
+            width:500px;
+            padding:40px;
+            border-radius:20px;
+
+            box-shadow:0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        h2{
+            color:#0F172A;
+            margin-bottom:25px;
+        }
+
+        input{
+            width:100%;
+            padding:14px;
+            margin-bottom:20px;
+
+            border:1px solid #ccc;
+            border-radius:10px;
+            box-sizing:border-box;
+        }
+
+        button{
+            width:100%;
+            padding:14px;
+
+            background:#38BDF8;
+            color:white;
+
+            border:none;
+            border-radius:10px;
+
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="card">
+
+    <h2>Modifier File</h2>
+
+    <form method="POST" action="{{ route('file.update', $file->idFile) }}">
+
+        @csrf
+
+        <input type="text"
+               name="nomFile"
+               value="{{ $file->nomFile }}">
+
+        <input type="number"
+               name="capacite"
+               value="{{ $file->capacite }}">
+
+        <button type="submit">
+            Modifier
+        </button>
+
+    </form>
+    <a href="{{ route('services.index') }}">Retour</a>
+
+</div>
+
+
+</body>
+</html>
+

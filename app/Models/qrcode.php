@@ -12,7 +12,8 @@ class Qrcode extends Model
 
     protected $fillable = [
         'code',
-        'idTicket'
+        'idTicket',
+        'idUser'
     ];
 
     public function ticket()

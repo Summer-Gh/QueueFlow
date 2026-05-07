@@ -1,99 +1,332 @@
-<h1>Liste des services</h1>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Services</title>
 
-{{-- ========================= --}}
-{{-- MESSAGES --}}
-{{-- ========================= --}}
-@if(session('success'))
-    <p style="color: green;">{{ session('success') }}</p>
-@endif
+    <style>
 
-@if(session('error'))
-    <p style="color: red;">{{ session('error') }}</p>
-@endif
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#F1F5F9;
+        }
 
-<hr>
+        .navbar{
+            background:#0F172A;
+            color:white;
+            padding:20px 40px;
 
-{{-- ========================= --}}
-{{-- AGENT : ADD SERVICE --}}
-{{-- ========================= --}}
-@if(session('role') == 'agent')
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
 
-<h3>Ajouter un service</h3>
+            box-shadow:0 2px 10px rgba(0,0,0,0.1);
+        }
 
-<form method="POST" action="{{ route('services.add') }}">
-    @csrf
+        .logo{
+            display:flex;
+            align-items:center;
+            gap:12px;
+        }
 
-    <input type="text" name="nomService" placeholder="Nom du service" required><br><br>
+        .logo-circle{
+            width:40px;
+            height:40px;
+            border-radius:50%;
+            background:#38BDF8;
+        }
 
-    <input type="text" name="description" placeholder="Description" required><br><br>
+        .logout{
+            background:#38BDF8;
+            color:white;
+            padding:10px 18px;
+            border-radius:10px;
+            text-decoration:none;
+            transition:0.3s;
+        }
 
-    <button type="submit">Ajouter</button>
-</form>
+        .logout:hover{
+            background:#0ea5e9;
+        }
 
-<hr>
+        .container{
+            padding:40px;
+            max-width:1100px;
+            margin:auto;
+        }
 
-@endif
+        h1{
+            color:#0F172A;
+            margin-bottom:30px;
+        }
 
-{{-- ========================= --}}
-{{-- LIST OF SERVICES --}}
-{{-- ========================= --}}
-@forelse($services as $service)
+        .service-card{
+            background:white;
+            padding:25px;
+            border-radius:20px;
+            margin-bottom:25px;
 
-    {{-- SERVICE CARD (CLICKABLE) --}}
-    <a href="{{ route('services.show', $service->idService) }}" style="text-decoration:none; color:black;">
-        <div style="border:1px solid black; padding:10px; margin:10px;">
-            <h3>{{ $service->nomService }}</h3>
-            <p>{{ $service->description }}</p>
-        </div>
+            box-shadow:0 5px 15px rgba(0,0,0,0.08);
+
+            transition:0.3s;
+        }
+
+        .service-card:hover{
+            transform:translateY(-3px);
+        }
+
+        .service-card h3{
+            color:#0F172A;
+            margin-top:0;
+        }
+
+        .service-card p{
+            color:#666;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin-bottom:15px;
+
+            border:1px solid #cbd5e1;
+            border-radius:10px;
+
+            box-sizing:border-box;
+
+            font-size:15px;
+        }
+
+        button{
+            padding:12px 18px;
+            border:none;
+            border-radius:10px;
+
+            background:#38BDF8;
+            color:white;
+
+            font-weight:bold;
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        button:hover{
+            opacity:0.9;
+        }
+
+        .danger{
+            background:#ef4444;
+        }
+
+        .update{
+            display:inline-block;
+            margin-top:15px;
+            margin-bottom:15px;
+
+            text-decoration:none;
+            color:#38BDF8;
+            font-weight:bold;
+        }
+
+        .message-success{
+            background:#dcfce7;
+            color:#166534;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:20px;
+        }
+
+        .message-error{
+            background:#fee2e2;
+            color:#991b1b;
+            padding:15px;
+            border-radius:10px;
+            margin-bottom:20px;
+        }
+
+        .back-btn{
+            display:inline-block;
+            margin-top:20px;
+
+            text-decoration:none;
+            background:#0F172A;
+            color:white;
+
+            padding:12px 18px;
+            border-radius:10px;
+        }
+
+        hr{
+            border:none;
+            border-top:1px solid #e2e8f0;
+            margin:20px 0;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div class="navbar">
+
+    <div class="logo">
+        <div class="logo-circle"></div>
+        <h2>QueueFlow</h2>
+    </div>
+
+    <a href="/logout" class="logout">
+        Déconnexion
     </a>
 
+</div>
+
+<div class="container">
+
+    <h1>Liste des services</h1>
+
+    @if(session('success'))
+        <div class="message-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="message-error">
+            {{ session('error') }}
+        </div>
+    @endif
+
+
     {{-- ========================= --}}
-    {{-- AGENT ACTIONS --}}
+    {{-- ADD SERVICE --}}
     {{-- ========================= --}}
     @if(session('role') == 'agent')
 
-        {{-- ADD FILE (ONLY IF NONE EXISTS) --}}
-        @if(!$service->fileAttente)
+    <div class="service-card">
 
-            <h4>Ajouter une file</h4>
+        <h3>Ajouter un service</h3>
 
-            <form method="POST" action="{{ route('file.add') }}">
-                @csrf
-
-                <input type="hidden" name="idService" value="{{ $service->idService }}">
-
-                <input type="text" name="nomFile" placeholder="Nom de la file" required><br><br>
-                <input type="number" name="capacite" placeholder="Capacité" required><br><br>
-
-                <button type="submit">Ajouter file</button>
-            </form>
-
-        @else
-            <p style="color: gray;">Ce service possède déjà une file</p>
-        @endif
-
-        <br>
-
-        {{-- UPDATE SERVICE --}}
-        <a href="{{ route('services.update.form', $service->idService) }}">
-            Modifier service
-        </a>
-
-        <br><br>
-
-        {{-- DELETE SERVICE --}}
-        <form method="POST" action="{{ route('services.delete', $service->idService) }}">
+        <form method="POST" action="{{ route('services.add') }}">
             @csrf
-            <button style="color:red;">Supprimer service</button>
+
+            <input type="text"
+                   name="nomService"
+                   placeholder="Nom du service"
+                   required>
+
+            <input type="text"
+                   name="description"
+                   placeholder="Description"
+                   required>
+
+            <button type="submit">
+                Ajouter
+            </button>
+
         </form>
 
-        <hr>
+    </div>
 
     @endif
 
-@empty
-    <p>Aucun service disponible</p>
-@endforelse
 
-<br>
-<a href="/dashboard">Retour au dashboard</a>
+    {{-- ========================= --}}
+    {{-- SERVICES --}}
+    {{-- ========================= --}}
+    @forelse($services as $service)
+
+    <div class="service-card">
+
+        <a href="{{ route('services.show', $service->idService) }}"
+           style="text-decoration:none; color:black;">
+
+            <h3>{{ $service->nomService }}</h3>
+
+            <p>{{ $service->description }}</p>
+
+        </a>
+
+
+        {{-- ========================= --}}
+        {{-- AGENT ACTIONS --}}
+        {{-- ========================= --}}
+        @if(session('role') == 'agent')
+
+            @if(!$service->fileAttente)
+
+                <hr>
+
+                <h4>Ajouter une file</h4>
+
+                <form method="POST" action="{{ route('file.add') }}">
+                    @csrf
+
+                    <input type="hidden"
+                           name="idService"
+                           value="{{ $service->idService }}">
+
+                    <input type="text"
+                           name="nomFile"
+                           placeholder="Nom de la file"
+                           required>
+
+                    <input type="number"
+                           name="capacite"
+                           placeholder="Capacité"
+                           required>
+
+                    <button type="submit">
+                        Ajouter file
+                    </button>
+
+                </form>
+
+            @else
+
+                <p style="margin-top:15px; color:#64748b;">
+                    Une file existe déjà pour ce service.
+                </p>
+
+            @endif
+
+
+            <a href="{{ route('services.update.form', $service->idService) }}"
+               class="update">
+
+                Modifier service
+
+            </a>
+
+            <form method="POST"
+                  action="{{ route('services.delete', $service->idService) }}">
+
+                @csrf
+
+                <button class="danger">
+                    Supprimer service
+                </button>
+
+            </form>
+
+        @endif
+
+    </div>
+
+    @empty
+
+        <div class="service-card">
+            <p>Aucun service disponible</p>
+        </div>
+
+    @endforelse
+
+
+    <a href="/dashboard" class="back-btn">
+        Retour au dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

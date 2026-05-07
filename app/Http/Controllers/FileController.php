@@ -35,24 +35,32 @@ class FileController extends Controller
         return back()->with('error', 'File inexistante');
     }
 
+    // prevent duplicate join
+    $already = Ticket::where('idFile', $file->idFile)
+        ->where('idUser', session('user_id'))
+        ->exists();
+
+    if ($already) {
+        return back()->with('error', 'Vous êtes déjà dans cette file');
+    }
+
     $count = Ticket::where('idFile', $file->idFile)->count();
 
+    // capacity check
     if ($count >= $file->capacite) {
         return back()->with('error', 'File pleine');
     }
 
     $position = $count + 1;
-    $temps = $position * 5;
 
     $ticket = Ticket::create([
-        'tempsEstime' => $temps,
         'position' => $position,
-        'idFile' => $file->idFile
+        'tempsEstime' => $position * 5,
+        'idFile' => $file->idFile,
+        'idUser' => session('user_id')
     ]);
 
-    return back()->with('success', 
-        'Vous avez rejoint la file | Position: '.$position.' | Temps estimé: '.($position*5).' min'
-    );
+    return back()->with('success', 'Ticket créé');
     }
 
     // DELETE FILE (agent)
@@ -95,21 +103,24 @@ class FileController extends Controller
         ->first();
 
     if (!$first) {
-        return back()->with('error', 'Aucun client');
+        return back()->with('error', 'Aucun ticket');
     }
 
-    // remove first client
+    // delete first
     $first->delete();
 
-    // update others
+    // reorder
     $tickets = Ticket::where('idFile', $id)->get();
 
     foreach ($tickets as $t) {
+
         $t->position = $t->position - 1;
+
         $t->tempsEstime = $t->position * 5;
+
         $t->save();
     }
 
     return back()->with('success', 'Client suivant appelé');
-    }   
+    }  
 }

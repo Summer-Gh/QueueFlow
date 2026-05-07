@@ -68,21 +68,37 @@ class ServiceController extends Controller
     // =========================
     public function show($id)
     {
-        $service = Service::find($id);
+    $service = Service::find($id);
 
-        if (!$service) {
-            abort(404);
-        }
+    if (!$service) {
+        abort(404);
+    }
 
-        $tickets = [];
+    $tickets = [];
 
-        if ($service->fileAttente) {
-            $tickets = Ticket::where('idFile', $service->fileAttente->idFile)
-                ->orderBy('position', 'asc')
-                ->get();
-        }
+    // AGENT → sees all tickets
+    if (session('role') == 'agent' && $service->fileAttente) {
 
-        return view('services.show', compact('service', 'tickets'));
+        $tickets = Ticket::where('idFile', $service->fileAttente->idFile)
+            ->orderBy('position', 'asc')
+            ->get();
+    }
+
+    // USER → sees ONLY his ticket
+    $myTicket = null;
+
+    if (session('role') == 'utilisateur' && $service->fileAttente) {
+
+        $myTicket = Ticket::where('idFile', $service->fileAttente->idFile)
+            ->where('idUser', session('user_id'))
+            ->first();
+    }
+
+    return view('services.show', compact(
+        'service',
+        'tickets',
+        'myTicket'
+    ));
     }
 
     // =========================
