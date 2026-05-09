@@ -150,6 +150,12 @@
 
 </head>
 <body>
+    @php
+    $notifCount = \App\Models\notifications::where(
+        'idUser',
+        session('user_id')
+        )->where('isRead', 0)->count();
+    @endphp 
 
 <div class="navbar">
 
@@ -161,6 +167,9 @@
     </div>
 
     <div class="nav-right">
+        <a href="{{ route('notifications.index') }}"class="nav-btn">
+            🔔 Notifications ({{ $notifCount }})
+        </a>
 
         <a href="{{ route('profile') }}" class="nav-btn">
             Mon profil
@@ -267,15 +276,37 @@
                         ' | Position: '.$myTicket->position.
                         ' | Temps estimé: '.$myTicket->tempsEstime.' min'
                     ) !!}
+                    <br><br>
+                    <a href="{{ route('ticket.pdf', $myTicket->idTicket) }}"class="nav-btn">
+                        Télécharger ticket PDF
+                    </a>
 
-                    @if($myTicket->position <= 3)
+                    @if($myTicket->position == 1)
+                        <p style="
+                            background:#dcfce7;
+                            color:#166534;
+                            padding:15px;
+                            border-radius:10px;
+                            font-weight:bold;
+                            margin-top:20px;
+                        ">
+                            ✅ C'est votre tour !
+                        </p>
 
-                        <p style="color:red; font-weight:bold; margin-top:15px;">
+                    @elseif($myTicket->position <= 3)
+
+                        <p style="
+                            background:#fef3c7;
+                            color:#92400e;
+                            padding:15px;
+                            border-radius:10px;
+                            font-weight:bold;
+                            margin-top:20px;
+                        ">
                             ⚠️ Votre tour approche !
                         </p>
 
                     @endif
-
                 </div>
 
             @endif
@@ -363,32 +394,6 @@
 
     @endif
 
-    {{-- SERVICE MANAGEMENT --}}
-    @if(session('role') == 'agent')
-
-    <div class="card">
-
-        <a class="update-link"
-           href="{{ route('services.update.form', $service->idService) }}">
-
-            Modifier service
-
-        </a>
-
-        <br><br>
-
-        <form method="POST"
-              action="{{ route('services.delete', $service->idService) }}">
-            @csrf
-
-            <button class="danger">
-                Supprimer service
-            </button>
-        </form>
-
-    </div>
-
-    @endif
 
     <a class="update-link"
        href="{{ route('services.index') }}">

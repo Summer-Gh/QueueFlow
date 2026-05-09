@@ -134,6 +134,13 @@
 
 </head>
 <body>
+@php
+$notifCount = \App\Models\notifications::where(
+    'idUser',
+    session('user_id')
+)->where('isRead', 0)->count();
+
+@endphp 
 
 <div class="navbar">
 
@@ -147,6 +154,9 @@
     </div>
 
     <div class="nav-right">
+        <a href="{{ route('notifications.index') }}"class="nav-btn">
+            🔔 Notifications ({{ $notifCount }})
+        </a>
 
         <a href="/services" class="nav-btn">
             Services

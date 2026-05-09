@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\NotificationController;
 // welcome page
 Route::get('/', function () {
     return view('home');
@@ -42,10 +43,12 @@ Route::post('/file/update/{id}', [FileController::class, 'update'])->name('file.
 Route::get('/register', [AuthController::class, 'showRegister']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/file/next/{id}', [FileController::class, 'next'])->name('file.next');
-Route::post('/file/next/{id}', [FileController::class, 'next'])->name('file.next');
-Route::post('/file/next/{id}', [FileController::class, 'next'])->name('file.next');
 Route::get('/profile', [AuthController::class, 'profile'])->name('profile');
 
 Route::post('/profile/update', [AuthController::class, 'updateProfile'])->name('profile.update');
 
 Route::post('/profile/delete', [AuthController::class, 'deleteProfile'])->name('profile.delete');
+Route::get('/notifications',[NotificationController::class, 'index'])->name('notifications.index');
+Route::post('/notifications/read/{id}',[NotificationController::class, 'read'])->name('notifications.read');
+Route::post('/notifications/delete/{id}',[NotificationController::class, 'delete'])->name('notifications.delete');
+Route::get('/ticket/pdf/{id}',[FileController::class, 'downloadTicket'])->name('ticket.pdf');

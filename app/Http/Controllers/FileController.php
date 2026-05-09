@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\FileAttente;
 use App\Models\Ticket;
+use App\Models\Notifications;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class FileController extends Controller
 {
@@ -56,10 +58,26 @@ class FileController extends Controller
 
     $ticket = Ticket::create([
         'position' => $position,
-        'tempsEstime' => $position * 5,
+        'tempsEstime' => $position * 2,
         'idFile' => $file->idFile,
         'idUser' => session('user_id')
     ]);
+    Notifications::create([
+        'message' => 'Votre ticket a été créé avec succès',
+        'idUser' => session('user_id')
+    ]);
+    if($position <= 3){
+        Notifications::create([
+            'message' => 'Votre tour approche',
+            'idUser' => session('user_id')
+        ]);
+    }
+    if($position == 1){
+        Notifications::create([
+            'message' => 'C’est votre tour',
+            'idUser' => session('user_id')
+        ]);
+    }
 
     return back()->with('success', 'Ticket créé');
     }
@@ -123,11 +141,38 @@ class FileController extends Controller
 
         $t->position = $t->position - 1;
 
-        $t->tempsEstime = $t->position * 5;
+        $t->tempsEstime = $t->position * 2;
 
         $t->save();
+        if($t->position <= 3){
+            Notifications::create([
+                'message' => 'Votre tour approche',
+                'idUser' => $t->idUser
+            ]);
+        }
+        if($t->position == 1){
+            Notifications::create([
+                'message' => 'C’est votre tour',
+                'idUser' => $t->idUser
+            ]);
+        }
     }
 
     return back()->with('success', 'Client suivant appelé');
     }  
+    public function downloadTicket($id)
+    {
+    $ticket = Ticket::find($id);
+
+    if(!$ticket){
+        abort(404);
+    }
+
+    $pdf = Pdf::loadView(
+        'ticket.pdf',
+        compact('ticket')
+    );
+
+    return $pdf->download('ticket.pdf');
+    }
 }
