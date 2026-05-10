@@ -232,7 +232,7 @@ $notifCount = \App\Models\notifications::where(
 
     <p>
         Suivez-nous sur Facebook :
-        <a href="https://facebook.com">
+        <a href="https://www.facebook.com/za9slaw">
             QueueFlow
         </a>
     </p>
