@@ -10,6 +10,8 @@
             padding:40px;
         }
 
+
+        
         .ticket{
             border:2px solid #0F172A;
             border-radius:20px;
