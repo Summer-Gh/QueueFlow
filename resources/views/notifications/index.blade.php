@@ -1,44 +1,193 @@
-<h1>Mes notifications</h1>
+<style>
 
-@forelse($notifications as $notif)
-<div class="card" style="margin-bottom:20px;">
+body{
+    margin:0;
+    font-family:Arial;
+    background:#F1F5F9;
+}
 
-    <p>
-        {{ $notif->message }}
-    </p>
+.navbar{
+    background:#0F172A;
+    padding:18px 40px;
 
-    <br>
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
 
-    @if(!$notif->isRead)
+.nav-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
 
-    <form method="POST"
-          action="{{ route('notifications.read', $notif->idNotif) }}">
+    color:white;
+}
 
-        @csrf
+.logo{
+    width:55px;
+    height:55px;
+    object-fit:cover;
+    border-radius:12px;
+}
 
-        <button>
-            Marquer comme lu
-        </button>
+.nav-btn{
+    background:#38BDF8;
+    color:white;
 
-    </form>
+    padding:10px 18px;
+    border-radius:10px;
 
-    @endif
+    text-decoration:none;
+    font-weight:bold;
+}
 
-    <br>
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:40px;
+}
 
-    <form method="POST"
-          action="{{ route('notifications.delete', $notif->idNotif) }}">
+h1{
+    color:#0F172A;
+    margin-bottom:30px;
+}
 
-        @csrf
+.card{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    margin-bottom:20px;
 
-        <button class="danger">
-            Supprimer
-        </button>
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
 
-    </form>
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-3px);
+}
+
+.card p{
+    color:#334155;
+    font-size:16px;
+}
+
+button{
+    border:none;
+    padding:12px 18px;
+    border-radius:10px;
+
+    cursor:pointer;
+
+    color:white;
+    font-weight:bold;
+
+    transition:0.3s;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+.read-btn{
+    background:#38BDF8;
+}
+
+.danger{
+    background:#ef4444;
+}
+
+.empty{
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+
+    color:#64748B;
+
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.footer{
+    margin-top:60px;
+    background:#0F172A;
+    color:white;
+    text-align:center;
+    padding:25px;
+}
+
+.footer a{
+    color:#38BDF8;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+</style>
+<div class="navbar">
+
+    <div class="nav-left">
+
+        <img
+            src="{{ asset('images/logo.png') }}"
+            class="logo"
+        >
+
+        <h2>QueueFlow</h2>
+
+    </div>
+
+    <a href="{{ route('services.index') }}"
+       class="nav-btn">
+
+        Retour
+
+    </a>
 
 </div>
 
-@empty
-<p>Aucune notification</p>
-@endforelse
+<div class="container">
+    <h1>Mes notifications</h1>
+    @forelse($notifications as $notif)
+    <div class="card" style="margin-bottom:20px;">
+        <p>
+            {{ $notif->message }}
+        </p>
+        <br>
+        @if(!$notif->isRead)
+        <form method="POST"
+        action="{{ route('notifications.read', $notif->idNotif) }}">
+        @csrf
+        <button class="read-btn">
+            Marquer comme lu
+        </button>
+        </form>
+        @endif
+        <br>
+        <form method="POST"
+          action="{{ route('notifications.delete', $notif->idNotif) }}">
+          @csrf
+          <button class="danger">
+            Supprimer
+          </button>
+
+        </form>
+    </div>
+    @empty
+    <p>Aucune notification</p>
+    @endforelse
+</div>
+
+<div class="footer">
+
+    <p>
+        © 2026 QueueFlow — Gestion intelligente des files d’attente
+    </p>
+
+    <p>
+        Suivez-nous sur Facebook :
+        <a href="https://facebook.com">
+            QueueFlow
+        </a>
+    </p>
+
+</div>

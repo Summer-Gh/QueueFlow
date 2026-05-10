@@ -280,6 +280,14 @@
                     <a href="{{ route('ticket.pdf', $myTicket->idTicket) }}"class="nav-btn">
                         Télécharger ticket PDF
                     </a>
+                    <br><br>
+                    <form method="POST"
+                    action="{{ route('ticket.delete', $myTicket->idTicket) }}">
+                    @csrf
+                    <button class="danger">
+                        Supprimer le ticket
+                    </button>
+                </form>
 
                     @if($myTicket->position == 1)
                         <p style="

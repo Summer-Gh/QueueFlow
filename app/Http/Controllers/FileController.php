@@ -7,6 +7,7 @@ use App\Models\FileAttente;
 use App\Models\Ticket;
 use App\Models\Notifications;
 use Barryvdh\DomPDF\Facade\Pdf;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class FileController extends Controller
 {
@@ -63,18 +64,18 @@ class FileController extends Controller
         'idUser' => session('user_id')
     ]);
     Notifications::create([
-        'message' => 'Votre ticket a été créé avec succès',
+        'message' => 'Votre ticket a été créé avec succès pour la file '.$file->nomFile,
         'idUser' => session('user_id')
     ]);
     if($position <= 3){
         Notifications::create([
-            'message' => 'Votre tour approche',
+            'message' => 'Votre tour approche dans la file '.$file->nomFile,
             'idUser' => session('user_id')
         ]);
     }
     if($position == 1){
         Notifications::create([
-            'message' => 'C’est votre tour',
+            'message' => 'C’est votre tour dans la file '.$file->nomFile,
             'idUser' => session('user_id')
         ]);
     }
@@ -123,6 +124,7 @@ class FileController extends Controller
     }
     public function next($id)
     {
+    $file = FileAttente::find($id);
     $first = Ticket::where('idFile', $id)
         ->orderBy('position', 'asc')
         ->first();
@@ -146,33 +148,67 @@ class FileController extends Controller
         $t->save();
         if($t->position <= 3){
             Notifications::create([
-                'message' => 'Votre tour approche',
+                'message' => 'Votre tour approche dans la file '.$file->nomFile,
                 'idUser' => $t->idUser
             ]);
         }
         if($t->position == 1){
             Notifications::create([
-                'message' => 'C’est votre tour',
+                'message' => 'C’est votre tour dans la file '.$file->nomFile,
                 'idUser' => $t->idUser
             ]);
         }
     }
 
-    return back()->with('success', 'Client suivant appelé');
+    return back()->with('success', 'Client suivant appelé dans la file '.$file->nomFile);
     }  
     public function downloadTicket($id)
     {
     $ticket = Ticket::find($id);
 
-    if(!$ticket){
+    if (!$ticket) {
         abort(404);
     }
 
-    $pdf = Pdf::loadView(
-        'ticket.pdf',
-        compact('ticket')
-    );
+    $pdf = Pdf::loadView('ticket.pdf', compact(
+        'ticket'
+    ));
 
     return $pdf->download('ticket.pdf');
+    }
+    public function deleteTicket($id)
+    {
+    $ticket = Ticket::find($id);
+
+    if (!$ticket) {
+        abort(404);
+    }
+
+    $fileId = $ticket->idFile;
+
+    $ticket->delete();
+
+    // reorder remaining tickets
+    $tickets = Ticket::where('idFile', $fileId)
+        ->orderBy('position', 'asc')
+        ->get();
+
+    $position = 1;
+
+    foreach ($tickets as $t) {
+
+        $t->position = $position;
+
+        $t->tempsEstime = $position * 2;
+
+        $t->save();
+
+        $position++;
+    }
+
+    return back()->with(
+        'success',
+        'Ticket supprimé avec succès'
+    );
     }
 }

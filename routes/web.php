@@ -52,3 +52,4 @@ Route::get('/notifications',[NotificationController::class, 'index'])->name('not
 Route::post('/notifications/read/{id}',[NotificationController::class, 'read'])->name('notifications.read');
 Route::post('/notifications/delete/{id}',[NotificationController::class, 'delete'])->name('notifications.delete');
 Route::get('/ticket/pdf/{id}',[FileController::class, 'downloadTicket'])->name('ticket.pdf');
+Route::post('/ticket/delete/{id}',[FileController::class, 'deleteTicket'])->name('ticket.delete');
