@@ -11,8 +11,8 @@
             background:#F8FAFC;
         }
 
-        .container{
-            border:3px solid #0F172A;
+        .ticket{
+            border:2px solid #0F172A;
             border-radius:20px;
             padding:40px;
             text-align:center;
