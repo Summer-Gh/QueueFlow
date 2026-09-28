@@ -1,59 +1,121 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# QueueFlow
+Système de gestion automatisée des files d'attente virtuelles.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Présentation
+QueueFlow est une application web conçue pour moderniser et automatiser la gestion des files d'attente.
+La solution permet aux utilisateurs de réserver leur place à distance, de suivre leur progression dans la file et d'obtenir une estimation de leur temps d'attente, tout en permettant aux agents de gérer les services et les files d'attente.
+L'objectif est de réduire les temps d'attente physiques et d'améliorer l'organisation et la fluidité des services.
 
-## About Laravel
+## Objectif
+Les files d'attente traditionnelles peuvent entraîner des déplacements inutiles, des temps d'attente importants et une organisation difficile des flux de personnes.
+QueueFlow propose une solution numérique permettant de gérer ces flux de manière plus organisée grâce à l'automatisation, au suivi de la file et aux notifications.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+La solution vise notamment à permettre aux utilisateurs de :
+- réserver leur place à distance ;
+- suivre leur position dans la file ;
+- consulter leur temps d'attente estimé ;
+- recevoir des notifications lorsque leur tour approche ;
+- valider leur ticket à l'aide d'un QR code.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Fonctionnalités
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+ ### Utilisateur
 
-## Learning Laravel
+- Création et gestion du compte
+- consultation des services disponibles
+- gestion d'une file d'attente (consulter/rejoindre)
+- Obtention d'un ticket -Télecharger le ticket/ supprimer- (position + temps estimé + Qrcode)
+- Réception de notifications (consulter/marquer comme lue/supprimer)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+ ### Agent de service
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Gestion des services (ajout/suppression/consultation/modification)
+- Gestion des files d'attente (ajout/suppression/consultation/modification)
+- Gestion des notifications
+- Gestion des accès (générer un ticket+ Qrcode)
 
-## Laravel Sponsors
+  ## Fonctionnement
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Parcours utilisateur
 
-### Premium Partners
+1. L'utilisateur crée un compte ou se connecte à son compte.
+2. Il consulte les services disponibles.
+3. Il sélectionne une file d'attente et peut la rejoindre.
+4. Un ticket lui est attribué avec sa position, son temps d'attente estimé et un QR code.
+5. L'utilisateur peut consulter, télécharger ou supprimer son ticket.
+6. Il reçoit des notifications concernant l'évolution de son tour. (pos<=3 -> votre tour s'approche. / pos=1 -> c'est votre tour)
+7. Il peut consulter, marquer comme lue ou supprimer ses notifications.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Parcours agent
 
-## Contributing
+1. L'agent se connecte à son compte.
+2. Son compte étant préalablement enregistré dans le système, il accède directement à son espace dédié.
+3. Il peut gérer les services et les files d'attente.
+4. Il assure le suivi et la gestion des files d'attente.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+  ## Base de données
+QueueFlow repose sur une base de données relationnelle permettant de gérer
+les utilisateurs, les agents, les services, les files d'attente,
+les tickets et les notifications.
 
-## Code of Conduct
+ ### Structure de la base de données
+<img width="867" height="272" alt="image" src="https://github.com/user-attachments/assets/4838a59d-8327-455d-bc16-5bedc8c043d4" />*
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+ ### Diagramme de classes
+<img width="857" height="479" alt="image" src="https://github.com/user-attachments/assets/aab97f6d-1b32-4308-8199-19e9423b22b7" />
 
-## Security Vulnerabilities
+## Technologies utilisées
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- **PHP**
+- **Laravel**
+- **MySQL**
+- **HTML / CSS**
+- **Blade**
+- **Git / GitHub**
 
-## License
+## Projet et contribution
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Projet académique réalisé en équipe dans le cadre de la formation
+Business Information Systems à ESPRIT.
+
+En tant que chef de projet, j'ai assuré la coordination technique du projet
+ainsi que la mise en cohérence et le perfectionnement des différentes
+fonctionnalités de l'application.
+
+J'ai notamment pris en charge et développé à partir de zéro :
+- le système automatisé de gestion et de planification des files d'attente 
+- le système de tickets et de génération des QR codes 
+- le système de notifications 
+- les tableaux de bord et les interfaces de gestion 
+- la gestion des services et des files d'attente 
+- la conception et l'intégration de la base de données.
+
+## Démonstration
+
+ ### Parcours agent
+https://github.com/user-attachments/assets/36d55a1c-10da-44f0-822a-b52a5c0a6099
+
+ ### Parcours utilisateur
+https://github.com/user-attachments/assets/5b4a2968-ae5a-4b90-bff6-29849d2ead74
+
+ ### Déroulement de la file d'attente
+
+Le déroulement de la file d'attente peut s'effectuer selon deux modes :
+
+-  **Mode manuel :** l'agent utilise le bouton « Appeler le suivant »
+  afin de faire avancer la file d'attente manuellement.
+
+-  **Mode automatique :** une fois le temps d'attente estimé écoulé,
+  le système appelle automatiquement le ticket suivant.
+
+## État du projet
+
+Projet fonctionnel développé dans le cadre de la formation.
+
+L'application est actuellement exécutée en environnement local et n'est pas encore déployée en ligne.
+
+## Documentation
+
+Pour plus de détails sur l'analyse, la conception et la réalisation
+du projet :
+[Consulter la présentation complète du projet](https://canva.link/ihrflhujjfnw8m7)
